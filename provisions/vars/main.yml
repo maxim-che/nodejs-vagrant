@@ -1,0 +1,8 @@
+---
+project_folder: /srv/booklya_personal.ru
+server_hostname: 'booklya_personal.dev'
+db_user: postgres
+db_password: postgres
+db_host: localhost
+db_name_dev: booklya_personal_dev
+db_name_test: booklya_personal_test

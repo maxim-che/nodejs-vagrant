@@ -1,0 +1,27 @@
+server {
+   listen 80;
+
+   root /srv/booklya_personal.ru/_frontend;
+   index index.html index.htm;
+
+   server_name booklya_personal.dev;
+
+   location ~ \.(gif|jpg|png)$ {
+        location ~ /img/ {
+                root /srv/booklya_personal.ru/_frontend;
+        }
+
+        location ~ /uploads/images/ {
+                root /srv/booklya_personal.ru;
+        }
+   }
+
+   location ~ \.(eot|ttf|woff|gz)$ {
+        root /srv/booklya_personal.ru/_frontend;
+   }
+
+   location ~ {
+        try_files $uri $uri/ /index.html;
+   }
+}
+

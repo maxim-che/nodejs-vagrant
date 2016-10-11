@@ -1,0 +1,52 @@
+---
+
+- hosts: main
+  become: yes
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - { role: commons }
+    - { role: postgres }
+    - { role: nginx }
+
+  tasks:
+    - name: npm install
+      command: npm install
+      args:
+        chdir: "{{project_folder}}/"
+    
+    - name: Install Sequelize-CLI ORM
+      become: yes
+      command: npm install -g sequelize-cli
+    
+    - name: Install Mocha
+      command: npm install -g mocha
+
+    - local_action: stat path={{project_folder}}/package.json
+      register: package_json_file
+      become: no
+  
+    - name: Install Express.js Generator
+      command: npm install -g express-generator
+
+    - name: Init Express.JS App if package.json file is not exists
+      command: express --force --git --css sass .
+      when: package_json_file.stat.exists == False
+      args:
+        chdir: "{{project_folder}}/"
+
+    - name: Add Sequelize.JS to project
+      command: npm i sequelize --save
+      args:
+        chdir: "{{project_folder}}/"
+
+    - name: Install packages from NPM
+      command: npm i
+      args:
+        chdir: "{{project_folder}}/"
+
+    - name: Init Sequelize in project
+      command: sequelize init
+      args:
+        chdir: "{{project_folder}}/"

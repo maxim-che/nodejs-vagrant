@@ -1,0 +1,44 @@
+- name: ensure apt cache is up to date
+  apt: update_cache=yes
+- name: ensure packages are installed
+  apt: name={{item}}
+  with_items:
+      - postgresql
+      - libpq-dev
+      - python-psycopg2
+
+- name: ensure database is created for development env
+  become_user: postgres
+  postgresql_db: name={{db_name_dev}}
+
+- name: ensure user has access to database for development env
+  become_user: postgres
+  postgresql_user: db={{db_name_dev}} name={{db_user}} password={{db_password}} priv=ALL
+
+- name: ensure database is created for test env
+  sudo_user: postgres
+  postgresql_db: name={{db_name_test}}
+
+- name: ensure user has access to database for test env
+  sudo_user: postgres
+  postgresql_user: db={{db_name_test}} name={{db_user}} password={{db_password}} priv=ALL
+
+- name: ensure user does not have unnecessary privilege
+  sudo_user: postgres
+  postgresql_user: name={{db_user}} role_attr_flags=NOSUPERUSER,NOCREATEDB
+
+- name: Configure PostgreSQL (auth)
+  become: yes
+  template: 
+    src: ../templates/pg_hba.conf
+    dest: /etc/postgresql/9.3/main/pg_hba.conf
+
+- name: Configure PostgreSQL
+  become: yes
+  template: 
+    src: ../templates/postgresql.conf
+    dest: /etc/postgresql/9.3/main/postgresql.conf
+
+- name: Restarting PostgreSQL Server
+  become: yes
+  service: name=postgresql state=restarted

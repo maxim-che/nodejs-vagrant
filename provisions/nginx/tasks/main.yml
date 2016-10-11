@@ -1,0 +1,13 @@
+- name: Configure Nginx
+  become: yes
+  template: 
+    src: ../templates/booklya_personal.dev
+    dest: /etc/nginx/sites-available/booklya_personal.dev
+
+- name: Create Symlink for booklya_personal.dev
+  become: yes
+  file: src=/etc/nginx/sites-available/booklya_personal.dev dest=/etc/nginx/sites-enabled/booklya_personal.dev state=link
+
+- name: Restart Nginx
+  become: yes
+  service: name=nginx state=restarted

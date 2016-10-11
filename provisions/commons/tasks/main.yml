@@ -1,0 +1,22 @@
+---
+
+- name: Install required packages
+  become: yes
+  apt: name={{ item }} update_cache=yes
+  with_items:
+    - curl
+    - openssl
+    - git-core
+    - libcurl3-dev
+    - make
+    - g++
+    - imagemagick
+    - libgd2-xpm-dev
+    - nginx
+
+- name: Add source with Node.JS 6.x
+  shell: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+
+- name: Install Nodej.JS
+  become: yes
+  apt: name=nodejs force=yes
