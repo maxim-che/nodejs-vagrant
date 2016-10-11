@@ -1,3 +1,4 @@
 .vagrant
 .tmp
 project/*
+!project/README.md
