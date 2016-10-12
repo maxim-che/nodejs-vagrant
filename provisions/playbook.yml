@@ -22,13 +22,13 @@
     
     - name: Install Mocha
       command: npm install -g mocha
-
-    - local_action: stat path={{project_folder}}/package.json
-      register: package_json_file
-      become: no
   
     - name: Install Express.js Generator
       command: npm install -g express-generator
+
+    - stat: path={{project_folder}}/package.json
+      register: package_json_file
+      become: no
 
     - name: Init Express.JS App if package.json file is not exists
       command: express --force --git --css sass .
@@ -46,7 +46,12 @@
       args:
         chdir: "{{project_folder}}/"
 
+    - stat: path={{project_folder}}/package.json
+      register: package_json_file
+      become: no
+
     - name: Init Sequelize in project
       command: sequelize init
+      when: package_json_file.stat.exists == False
       args:
         chdir: "{{project_folder}}/"
