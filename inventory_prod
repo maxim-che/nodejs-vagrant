@@ -1,4 +1,4 @@
-booklyapersonal ansible_ssh_host=138.201.133.153 ansible_ssh_port=22 ansible_ssh_private_key_file=~/prod_files/private_key
+dreamstudy.ru ansible_ssh_host=138.201.133.153 ansible_ssh_port=22 ansible_ssh_private_key_file=~/prod_files/private_key
 
 [main]
-booklyapersonal
+dreamstudy.ru
